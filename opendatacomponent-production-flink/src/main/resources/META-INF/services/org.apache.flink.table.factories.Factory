@@ -1,0 +1,3 @@
+com.cec.flink.connectors.http.HttpDynamicTableSourceFactory
+com.cec.flink.connectors.delivery.BlockingMapTableSinkFactory
+com.cec.flink.connectors.delivery.DeliveryTableSinkFactory

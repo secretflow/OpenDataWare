@@ -1,0 +1,55 @@
+package com.cec.examine.watermark;
+
+import com.cec.examine.util.FileUtilityUtil;
+
+import java.util.List;
+
+/**
+ * 测试1kw条数据加水印和提取水印的速度
+ */
+public class WaterMarkFakeLineTest {
+
+
+    public static void main(String [] args) {
+        //选择水印类型
+        WaterMark wm = new WaterMarkFakeLine(true);//伪行水印
+        //测试样本文件
+        String sourceFilePath = "E:\\work\\2025.03\\watermark\\a_waterzero_input.csv";
+        String targetFilePath = "E:\\work\\2025.03\\watermark\\a_waterzero_line_output.csv";
+        if(args.length > 0) {
+            sourceFilePath = args[0];
+            targetFilePath = args[1];
+        }
+        String seprator = ",";
+        //读取文件
+        FileUtilityUtil fileReader = FileUtilityUtil.getFileReader(sourceFilePath);
+        //把文件加载到内存
+        List<String> source = fileReader.getCSVAllList();
+        System.out.println("load file into memory: " + source.size() + " records.");
+        //生成水印,长度太长引起性能问题，建议10以下，碰撞概率较低
+        String key = "6OL0Mkg47ShKSKhjzrGAMWIzCMfuIdDvQ69ONHPlcsQv1bfUrHdIMjA4vWYkbxLg";
+        String encodeWaterMark = WaterMarkUtils.encodeWaterMark(key);
+        System.out.println("key:" + key + ", watermark: " + encodeWaterMark);
+        //加水印
+        long start = System.currentTimeMillis();
+        List<String> result = wm.addBatchWaterMark(source,seprator, encodeWaterMark, 100);
+        long end = System.currentTimeMillis();
+        System.out.println("add watermark time cos: " + (end-start) + "ms, " + source.size() + " records.");
+        //输出结果
+        FileUtilityUtil fileWriter = FileUtilityUtil.getFileWriter(targetFilePath);
+        for(String line: result) {
+            fileWriter.writeLine(line);
+        }
+        fileWriter.close();
+
+
+        //提取水印
+        FileUtilityUtil fileReader2 = FileUtilityUtil.getFileReader(targetFilePath);
+        //把文件加载到内存
+        List<String> source2 = fileReader2.getCSVAllList();
+        long extStartTime = System.currentTimeMillis();
+        String waterMark = WaterMarkUtils.extractBatchWaterMark(source2, seprator, null);
+        long extEndTime = System.currentTimeMillis();
+        System.out.println("extract waterMark is: " + waterMark + " time cos: " + (extEndTime - extStartTime) + "ms");
+    }
+}
