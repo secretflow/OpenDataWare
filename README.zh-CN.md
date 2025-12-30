@@ -74,28 +74,30 @@
 ## 快速开始（Getting Started）
 
 ```shell
-git clone https://github.com/secretflow/OpenDataComponent
-cd OpenDataComponent
+git clone https://github.com/secretflow/OpenDataWare
+cd OpenDataWare
 mvn install 
 ```
-或者您可以使用IDE工具例如IDEA、Eclipse等导入Maven工程后，直接运行[opendatacomponent-examples](opendatacomponent-examples)模块中的Main函数。
+或者您可以使用IDE工具例如IDEA、Eclipse等导入Maven工程后，直接运行[OpenDataWare-examples](opendataware-examples)模块中的Main函数。
 
 ## 代码示例
-请您在模块[opendatacomponent-examples](opendatacomponent-examples)中进行查阅和试运行。
+请您在模块[OpenDataWare-examples](opendataware-examples)中进行查阅和试运行。
 我们已经在该模块的Resource目录中准备了少量的样例数据，配合相关的样例程序进行使用。
 
 你可以通过如下代码直接查看元件元数据、模态元件、组态元件、组合态元件的数据结构。
 ```java
-DataComponentMetaExample dataComponentMetaExample1 = new DataComponentMetaExample("DataComponentDemo/DataComponentMetaDemo.json");
-System.out.println("这是一个数据元件定义/开发阶段的元数据：" + dataComponentMetaExample1.getDefinitionJSON());
-DataComponentMetaExample dataComponentMetaExample2 = new DataComponentMetaExample("DataComponentDemo/DataComponentMetaDemo.json");
-System.out.println("这是一个数据元件生产阶段的元数据：" + dataComponentMetaExample2.getProductionSON());
-ModalDataComponentExample modalDataComponentExample = new ModalDataComponentExample("DataComponentDemo/ModalDataComponentDemo.csv");
-System.out.println("这是一个模态数据元件的数据部分：" + modalDataComponentExample.getJSON());
-ComposedDataComponentExample composedDataComponentExample = new ComposedDataComponentExample("DataComponentDemo/ComposedDataComponentDemo.csv");
-System.out.println("这是一个组态数据元件的数据部分：" + composedDataComponentExample.getJSON());
-CombinatorialDataComponentExample combinatorialDataComponentExample = new CombinatorialDataComponentExample("DataComponentDemo/CombinatorialDataComponentDemo.csv");
-System.out.println("这是一个组合态数据元件的数据部分：" + combinatorialDataComponentExample.getJSON());
+//...
+public abstract class DCExample<T extends DataWare> {
+    
+    public static void main(String[] args) {
+        ModalDataWareExample modalDataWareExample = new ModalDataWareExample("DataWareDemo/ModalDataWareDemo.csv");
+        System.out.println("这是一个模态数据元件的数据部分：" + modalDataWareExample.getJSON());
+        ComposedDataWareExample composedDataWareExample = new ComposedDataWareExample("DataWareDemo/ComposedDataWareDemo.csv");
+        System.out.println("这是一个组态数据元件的数据部分：" + composedDataWareExample.getJSON());
+        CombinatorialDataWareExample combinatorialDataWareExample = new CombinatorialDataWareExample("DataWareDemo/CombinatorialDataWareDemo.csv");
+        System.out.println("这是一个组合态数据元件的数据部分：" + combinatorialDataWareExample.getJSON());
+    }
+}
 ```
 ## 如何生产元件
 目前本项目提供两种生产模式：调用即生产、预生产两种。目前项目支持Flink-2.1.0 用Flink SQL生产元件。
@@ -103,7 +105,7 @@ System.out.println("这是一个组合态数据元件的数据部分：" + combi
 ### 调用即生产
 
 所谓调用即生产，就是在调用元件交付接口时，触发元件生产。元件生产所需的数据源一般为多个Http Restful API。生产的逻辑是对多个API返回接口进行融合加工，即时返回元件结果。<br>
-运行的示例已经放在[opendatacomponent-examples](opendatacomponent-examples)模块中，可以先启动
+运行的示例已经放在[OpenDataWare-examples](opendataware-examples)模块中，可以先启动
 ```Java
 com.cec.example.Delivery.netty.DemoServer.main
 ```
@@ -211,9 +213,9 @@ WHERE t1.enterprise_code='$1' AND t2.enterprise_code='$1'
 ### 预生产
 元件预生产就是元件交付调用不直接触发元件生产，一般为元件生产后存储在交付调用的存储器上，比如redis、数据库等查询引擎，调用时直接读取事先存储好的元件数据。<br>
 为了后续扩展交付存储，我们提供了可以通过填写交付接口实现类名称的Flink Sink来支持元件交付存储的写入。<br>
-可以在[opendatacomponent-examples](opendatacomponent-examples)模块的
+可以在[OpenDataWare-examples](opendataware-examples)模块的
 ```java
-com.cec.example.ProductionProcesses.flink.DataComponentProductionBatchExamples;
+com.cec.example.ProductionProcesses.flink.DataWareProductionBatchExamples;
 ```
 中看到示例代码。Sink SQL为：
 ```SQL
@@ -229,7 +231,7 @@ CREATE TABLE modal_delivery_tbl (
     'dc.type' = 'modal',
     'dc.id' = 'DC002',
     'dc.main.key' = 'enterprise_code',
-    'dc.delivery.class' = 'com.cec.deliver.InnerMemory.DataComponentDeliveryInnerMemory'
+    'dc.delivery.class' = 'com.cec.deliver.InnerMemory.DataWareDeliveryInnerMemory'
 )
 ```
 
@@ -244,9 +246,9 @@ CREATE TABLE modal_delivery_tbl (
 
 ## 代码模块
 
-* [opendatacomponent-core](opendatacomponent-core) 元件核心类，其他模块均依赖核心类，包含了元件、元件元数据实体类定义、扩展交付套件、生产套件的接口定义等。核心类不依赖于任何第三方代码包。
-* [opendatacomponent-delivery-service](opendatacomponent-delivery-service) 元件交付服务套件，可以将元件数据写入数据库并提供高性能服务搭建框架代码。交付模块可以扩展，可以依赖tomcat、东方通、netty等服务中间件。
-* [opendatacomponent-production-flink](opendatacomponent-production-flink) 元件生产套件，可以提供元件生产的框架代码。生产模块可以扩展，可以依赖Flink、Spark等成熟的计算框架。
-* [opendatacomponent-examine-sdk](opendatacomponent-examine-sdk) 元件标准审核、元件生产审核的算子、数据脱敏SDK算子合集。
-* [opendatacomponent-examples](opendatacomponent-examples) 元件生产工序中的各类子流程样例展示。样例代码理论上需要依赖所有模块，以便更好的展示各模块的调用方式。
+* [OpenDataWare-core](opendataware-core) 元件核心类，其他模块均依赖核心类，包含了元件、元件元数据实体类定义、扩展交付套件、生产套件的接口定义等。核心类不依赖于任何第三方代码包。
+* [OpenDataWare-delivery-service](opendataware-delivery-service) 元件交付服务套件，可以将元件数据写入数据库并提供高性能服务搭建框架代码。交付模块可以扩展，可以依赖tomcat、东方通、netty等服务中间件。
+* [OpenDataWare-production-flink](opendataware-production-flink) 元件生产套件，可以提供元件生产的框架代码。生产模块可以扩展，可以依赖Flink、Spark等成熟的计算框架。
+* [OpenDataWare-examine-sdk](opendataware-examine-sdk) 元件标准审核、元件生产审核的算子、数据脱敏SDK算子合集。
+* [OpenDataWare-examples](opendataware-examples) 元件生产工序中的各类子流程样例展示。样例代码理论上需要依赖所有模块，以便更好的展示各模块的调用方式。
 
