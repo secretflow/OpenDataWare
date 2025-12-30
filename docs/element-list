@@ -45,7 +45,7 @@ com.cec.examine.util.key
 com.cec.examine.util.name
 com.cec.examine.util.pinyin
 com.cec.examine.watermark
-com.cec.example.DataComponentStandard
+com.cec.example.DataWareStandard
 com.cec.example.Delivery
 com.cec.example.Delivery.netty
 com.cec.example.Delivery.netty.controller

@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cec</groupId>
-    <artifactId>OpenDataComponent</artifactId>
+    <artifactId>OpenDataWare</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>opendatacomponent-examples</module>
-        <module>opendatacomponent-core</module>
-        <module>opendatacomponent-production-flink</module>
-        <module>opendatacomponent-delivery-service</module>
-        <module>opendatacomponent-examine-sdk</module>
+        <module>opendataware-examples</module>
+        <module>opendataware-core</module>
+        <module>opendataware-production-flink</module>
+        <module>opendataware-delivery-service</module>
+        <module>opendataware-examine-sdk</module>
     </modules>
 
     <properties>

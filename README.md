@@ -2,26 +2,26 @@
 <a href="./README.zh-CN.md">简体中文</a>｜<a href="./README.md">English</a>
 </p>
 
-# OpenDataComponent
+# OpenDataWare
 
-The Data Component open-source project is a data security computation framework. Its core technology employs a set of compliant and secure standardized production processes to ensure the compliance, irreversibility, and ease of use in the circulation of data elements.
+The DataWare open-source project is a data security computation framework. Its core technology employs a set of compliant and secure standardized production processes to ensure the compliance, irreversibility, and ease of use in the circulation of data elements.
 
 ## Features
 
-* Supports the definition of three component types: Modal Data Component, Composed Data Component, Combinatorial Data Component;
-* Supports the definition of component metadata;
-* Standard audit operators for component metadata and data;
-* Flink offline production suite for component manufacturing;
-* Netty delivery service suite for component delivery;
-* Core component classes, used to define standard interfaces for component models, production, delivery, and audit, facilitating modular extensibility;
-* A series of operators for component production and audit:
+* Supports the definition of three DataWare types: Modal DataWare, Composed DataWare, Combinatorial DataWare;
+* Supports the definition of DataWare metadata;
+* Standard audit operators for DataWare metadata and data;
+* Flink offline production suite for DataWare manufacturing;
+* Netty delivery service suite for DataWare delivery;
+* Core DataWare classes, used to define standard interfaces for DataWare models, production, delivery, and audit, facilitating modular extensibility;
+* A series of operators for DataWare production and audit:
   + Data Irreversibility Audit Operators: Similarity Audit, Relevance Audit, Outlier Detection Audit, Identifier Recognition Operator;
   + General Operators: Quality Check Operator, Information Item Recognition Operator;
   + Compliance Operators: Illicit/Violence/Terrorism Dictionary Recognition Operator.
 
-## Introduction to the Three Types of Components
+## Introduction to the Three Types of DataWares
 
-* Modal Data Component: Typically contains only two fields. The subject field is generally the unique identifier of a business entity, which could be an device, person, company, etc. The feature field is usually a generalized tag. During component delivery, the corresponding feature value is generally retrieved by directly querying the subject field.
+* Modal DataWare: Typically contains only two fields. The subject field is generally the unique identifier of a business entity, which could be an device, person, company, etc. The feature field is usually a generalized tag. During DataWare delivery, the corresponding feature value is generally retrieved by directly querying the subject field.
 
 | **Structure** | **Main Column**    | **Feature** | 
 |:--------------|:-------------------|:------------|
@@ -31,7 +31,7 @@ The Data Component open-source project is a data security computation framework.
 | content       | 11010*200001010002 | Low         |
 
 
-* Composed Data Component: There are no specific requirements on the number of fields. It stores detailed data but must not contain any subject identifier; the subject identifier needs to be removed or anonymized. During component delivery, detailed data can typically be retrieved in batches using an index and batch size.
+* Composed DataWare: There are no specific requirements on the number of fields. It stores detailed data but must not contain any subject identifier; the subject identifier needs to be removed or anonymized. During DataWare delivery, detailed data can typically be retrieved in batches using an index and batch size.
 
 | **Structure** | **Index** | **detail1**                        | **detail2**                      |
 |:--------------|:----------|:-----------------------------------|:---------------------------------|
@@ -41,7 +41,7 @@ The Data Component open-source project is a data security computation framework.
 | content       | 2         | 900                                | 200                              |     
 
 
-* Combinatorial Data Component：Contains a subject field, multiple feature fields, multiple detailed fields, and multiple query fields. During component delivery, querying by the subject field can only return the multiple feature fields, not the detailed fields. The detailed fields can be retrieved through batch queries using the query fields.
+* Combinatorial DataWare：Contains a subject field, multiple feature fields, multiple detailed fields, and multiple query fields. During DataWare delivery, querying by the subject field can only return the multiple feature fields, not the detailed fields. The detailed fields can be retrieved through batch queries using the query fields.
 
 | **Structure** | **Index**          | **detail1**    | **detail2**        |
 |:--------------|:-------------------|:---------------|:-------------------|
@@ -58,59 +58,61 @@ The Data Component open-source project is a data security computation framework.
 | content       | 1         | 2200                                  | -300                            | Shanghai     |
 | content       | 2         | 900                                   | 200                             | Shenzhen     |
 
-## Two Architectures for Component Production
+## Two Architectures for DataWare Production
 
 ### Call As Production
 
 ![call-as-production.png](readme-resource/call-as-production.png)
 
-Real-time Production & Delivery: As shown in the diagram, the red arrows represent the call chain, and the blue arrows represent the asynchronous data flow. When an application calls the component delivery API, the delivery API directly initiates a production request to the Flink job. This enables the job to immediately fetch data, produce the component, and return it to the delivery service, which finally delivers it to the application. The produced component is asynchronously written to a cache or database, allowing it to be matched (cache hit) for subsequent deliveries of the same component.
+Real-time Production & Delivery: As shown in the diagram, the red arrows represent the call chain, and the blue arrows represent the asynchronous data flow. When an application calls the DataWare delivery API, the delivery API directly initiates a production request to the Flink job. This enables the job to immediately fetch data, produce the DataWare, and return it to the delivery service, which finally delivers it to the application. The produced DataWare is asynchronously written to a cache or database, allowing it to be matched (cache hit) for subsequent deliveries of the same DataWare.
 
 ### Pre-Production
 
 ![pre-production.png](readme-resource/pre-production.png)
 
-Cache-First & Pre-Production: As shown in the diagram, the red arrows represent the call chain, and the blue arrows represent the asynchronous data flow. When an application calls the component delivery API, the request primarily attempts to retrieve data from the cache or database and does not trigger component production. If a component needs to be returned, pre-production must be initiated.
+Cache-First & Pre-Production: As shown in the diagram, the red arrows represent the call chain, and the blue arrows represent the asynchronous data flow. When an application calls the DataWare delivery API, the request primarily attempts to retrieve data from the cache or database and does not trigger DataWare production. If a DataWare needs to be returned, pre-production must be initiated.
 
 ## Getting Started
 
 ```shell
-git clone https://github.com/secretflow/OpenDataComponent
-cd OpenDataComponent
+git clone https://github.com/secretflow/OpenDataWare
+cd OpenDataWare
 mvn install 
 ```
-Alternatively, you can use an IDE tool such as IntelliJ IDEA or Eclipse to import the Maven project, and then directly run the Main function in the [opendatacomponent-examples](opendatacomponent-examples) module.
+Alternatively, you can use an IDE tool such as IntelliJ IDEA or Eclipse to import the Maven project, and then directly run the Main function in the [OpenDataWare-examples](opendataware-examples) module.
 
 ## Code Examples
 
-Please refer to and test run the code in the [opendatacomponent-examples](opendatacomponent-examples) module.
+Please refer to and test run the code in the [OpenDataWare-examples](opendataware-examples) module.
 We have prepared a small set of sample data in the Resource directory of this module for use with the relevant example programs.
-You can use the following code to directly inspect the data structures of component metadata, Composed Data Component, Configurable Components, and Combinatorial Data Component.
+You can use the following code to directly inspect the data structures of DataWare metadata, Composed DataWare, Configurable DataWares, and Combinatorial DataWare.
 ```java
-DataComponentMetaExample dataComponentMetaExample1 = new DataComponentMetaExample("DataComponentDemo/DataComponentMetaDemo.json");
-System.out.println("这是一个数据元件定义/开发阶段的元数据：" + dataComponentMetaExample1.getDefinitionJSON());
-DataComponentMetaExample dataComponentMetaExample2 = new DataComponentMetaExample("DataComponentDemo/DataComponentMetaDemo.json");
-System.out.println("这是一个数据元件生产阶段的元数据：" + dataComponentMetaExample2.getProductionSON());
-ModalDataComponentExample modalDataComponentExample = new ModalDataComponentExample("DataComponentDemo/ModalDataComponentDemo.csv");
-System.out.println("这是一个模态数据元件的数据部分：" + modalDataComponentExample.getJSON());
-ComposedDataComponentExample composedDataComponentExample = new ComposedDataComponentExample("DataComponentDemo/ComposedDataComponentDemo.csv");
-System.out.println("这是一个组态数据元件的数据部分：" + composedDataComponentExample.getJSON());
-CombinatorialDataComponentExample combinatorialDataComponentExample = new CombinatorialDataComponentExample("DataComponentDemo/CombinatorialDataComponentDemo.csv");
-System.out.println("这是一个组合态数据元件的数据部分：" + combinatorialDataComponentExample.getJSON());
-```
-## How to produce components
+//...
+public abstract class DCExample<T extends DataWare> {
 
-The project currently supports two production modes: Call As Production and Pre-Production. It utilizes Flink SQL on Flink-2.1.0 for component manufacturing.
+    public static void main(String[] args) {
+        ModalDataWareExample modalDataWareExample = new ModalDataWareExample("DataWareDemo/ModalDataWareDemo.csv");
+        System.out.println("这是一个模态数据元件的数据部分：" + modalDataWareExample.getJSON());
+        ComposedDataWareExample composedDataWareExample = new ComposedDataWareExample("DataWareDemo/ComposedDataWareDemo.csv");
+        System.out.println("这是一个组态数据元件的数据部分：" + composedDataWareExample.getJSON());
+        CombinatorialDataWareExample combinatorialDataWareExample = new CombinatorialDataWareExample("DataWareDemo/CombinatorialDataWareDemo.csv");
+        System.out.println("这是一个组合态数据元件的数据部分：" + combinatorialDataWareExample.getJSON());
+    }
+}
+```
+## How to produce DataWares
+
+The project currently supports two production modes: Call As Production and Pre-Production. It utilizes Flink SQL on Flink-2.1.0 for DataWare manufacturing.
 
 ### Call As Production
 
-"Call As Production" means that component production is triggered when the component delivery interface is invoked. The data sources required for component production are typically multiple HTTP RESTful APIs. The production logic involves integrating and processing the responses from these multiple APIs to immediately return the component result.
-The running example has been placed in the [opendatacomponent-examples](opendatacomponent-examples) module and can be started first.
+"Call As Production" means that DataWare production is triggered when the DataWare delivery interface is invoked. The data sources required for DataWare production are typically multiple HTTP RESTful APIs. The production logic involves integrating and processing the responses from these multiple APIs to immediately return the DataWare result.
+The running example has been placed in the [OpenDataWare-examples](opendataware-examples) module and can be started first.
 
 ```Java
 com.cec.example.Delivery.netty.DemoServer.main
 ```
-After startup, the DemoServerwill load the SQL related to "Production-on-Call" in its configPluginmethod. The component delivery interface is:
+After startup, the DemoServerwill load the SQL related to "Production-on-Call" in its configPluginmethod. The DataWare delivery interface is:
 
 ```Java
 http://localhost:8088/cap
@@ -213,10 +215,10 @@ WHERE t1.enterprise_code='$1' AND t2.enterprise_code='$1'
 ```
 
 ### Pre-Production
-"Pre-production of components" means that a delivery call does not directly trigger component production. Typically, components are produced in advance and stored in a storage medium accessible by the delivery call, such as a query engine like Redis or a database. The call directly reads the pre-stored component data. To facilitate future expansion of delivery storage, we provide a Flink Sink that allows specifying the delivery interface implementation class name to support writing to various component delivery storages.<br>
-in the [opendatacomponent-examples](opendatacomponent-examples) module, you can find example code in 
+"Pre-production of DataWares" means that a delivery call does not directly trigger DataWare production. Typically, DataWares are produced in advance and stored in a storage medium accessible by the delivery call, such as a query engine like Redis or a database. The call directly reads the pre-stored DataWare data. To facilitate future expansion of delivery storage, we provide a Flink Sink that allows specifying the delivery interface implementation class name to support writing to various DataWare delivery storages.<br>
+in the [OpenDataWare-examples](opendataware-examples) module, you can find example code in 
 ```java
-com.cec.example.ProductionProcesses.flink.DataComponentProductionBatchExamples;
+com.cec.example.ProductionProcesses.flink.DataDataWareProductionBatchExamples;
 ```
 The Sink ddl sql is:
 
@@ -233,7 +235,7 @@ CREATE TABLE modal_delivery_tbl (
     'dc.type' = 'modal',
     'dc.id' = 'DC002',
     'dc.main.key' = 'enterprise_code',
-    'dc.delivery.class' = 'com.cec.deliver.InnerMemory.DataComponentDeliveryInnerMemory'
+    'dc.delivery.class' = 'com.cec.deliver.InnerMemory.DataDataWareDeliveryInnerMemory'
 )
 ```
 
@@ -248,9 +250,9 @@ Compilation environment preparation:
 
 ## Modules
 
-* [opendatacomponent-core](opendatacomponent-core) The core component classes. All other modules depend on this core module. It contains the entity class definitions for components and component metadata, as well as interface definitions for extending delivery suites and production suites. The core module does not depend on any third-party code packages.
-* [opendatacomponent-delivery-service](opendatacomponent-delivery-service) The component delivery service suite. It provides the framework code for writing component data to databases and building high-performance services. The delivery module is extensible and can rely on service middleware such as Tomcat, TongWeb, or Netty.
-* [opendatacomponent-production-flink](opendatacomponent-production-flink) The component production suite. It provides the framework code for component production. The production module is extensible and can rely on mature computation frameworks like Flink or Spark.
-* [opendatacomponent-examine-sdk](opendatacomponent-examine-sdk) A collection of operators for standard component auditing, component production auditing, and data desensitization SDK operators.
-* [opendatacomponent-examples](opendatacomponent-examples) Demonstrates various sub-process examples within the component production workflow. The example code is designed to depend on all modules to best illustrate how each module is called.
+* [OpenDataWare-core](opendataware-core) The core DataWare classes. All other modules depend on this core module. It contains the entity class definitions for DataWares and DataWare metadata, as well as interface definitions for extending delivery suites and production suites. The core module does not depend on any third-party code packages.
+* [OpenDataWare-delivery-service](opendataware-delivery-service) The DataWare delivery service suite. It provides the framework code for writing DataWare data to databases and building high-performance services. The delivery module is extensible and can rely on service middleware such as Tomcat, TongWeb, or Netty.
+* [OpenDataWare-production-flink](opendataware-production-flink) The DataWare production suite. It provides the framework code for DataWare production. The production module is extensible and can rely on mature computation frameworks like Flink or Spark.
+* [OpenDataWare-examine-sdk](opendataware-examine-sdk) A collection of operators for standard DataWare auditing, DataWare production auditing, and data desensitization SDK operators.
+* [OpenDataWare-examples](opendataware-examples) Demonstrates various sub-process examples within the DataWare production workflow. The example code is designed to depend on all modules to best illustrate how each module is called.
 
